@@ -60,7 +60,7 @@ flowchart TD
 |---|---|---|
 | Frontend | Кабинет, уведомление, лента, чат, действия и опросы | `frontend/src/`, `frontend/README.md` |
 | Backend | Приём новостей, бизнес-профили, подготовка контекста, push и chat | `backend/cmd/backend/main.go`, `backend/internal/` |
-| News Daemon | Опрос источников по расписанию, извлечение текста, отправка в backend | `backend/daemon/` |
+| News Daemon | Опрос источников по расписанию, извлечение текста, отправка в backend | `news-listener/` |
 | Model A / Analyser | Классификация по ОКВЭД и географии, источник, краткая выжимка | `analyser/main.py`, `analyser/industries.csv` |
 | Model B | Персонализированная интерпретация с контекстом компании и группы | `backend/internal/model_b/`, `backend/internal/prompt/` |
 | PostgreSQL | Профили и новостные выжимки в двух БД | `backend/migrations/` |
@@ -132,12 +132,12 @@ CSV читаются с разделителем `;`, в кодировке `utf
 | Docker | Docker Engine/Desktop и Docker Compose с командой `docker compose` |
 | Frontend | Node.js 20.19+ либо 22.12+; зависимости фиксирует `frontend/package-lock.json`, установка через `npm ci` |
 | Backend | Версия языка указана в `backend/go.mod` — `go 1.27.3`; зависимости фиксируют `go.mod` и `go.sum` |
-| Python | Образы: Python 3.11 для backend/daemon, Python 3.12 для analyser; локальное окружение должно поддерживать зависимости выбранного компонента |
+| Python | Образы: Python 3.11 для news-listener, Python 3.12 для analyser; локальное окружение должно поддерживать зависимости выбранного компонента |
 | PostgreSQL | PostgreSQL 16; постоянный Docker volume для данных |
 | LLM | Ключ команды и сетевой доступ к шлюзам организаторов |
 | PDF | Предоставленная папка документов и абсолютный `PDF_HOST_DIR` для симулятора |
 
-В `analyser/requirements.txt` и `backend/daemon/requirements.txt` используются нижние границы версий. Они не являются полными lock-файлами. У симулятора есть отдельный `requirements-lock.txt`. Для воспроизведения сдаваемого окружения нужно сохранять версии образов и фактический набор Python-зависимостей.
+В `analyser/requirements.txt` и `news-listener/requirements.txt` используются нижние границы версий. Они не являются полными lock-файлами. У симулятора есть отдельный `requirements-lock.txt`. Для воспроизведения сдаваемого окружения нужно сохранять версии образов и фактический набор Python-зависимостей.
 
 ## Запуск
 
@@ -234,7 +234,7 @@ python3 -m venv .venv-import
 | `MODEL_B_BASE_URL` | URL сервиса Model B; значение шаблона — `https://changellenge.up.railway.app/v1` |
 | `MODEL_B_API_KEY` | Секретный ключ команды |
 | `MODEL_B_MODEL` | Точное имя разрешённой модели |
-| `DAEMON_SOURCES_CONFIG` | Путь к YAML источников, в контейнере `/app/daemon/sources.yaml` |
+| `DAEMON_SOURCES_CONFIG` | Путь к YAML источников, в контейнере `/app/news-listener/sources.yaml` |
 | `DAEMON_POLL_INTERVAL` | Параметр базового интервала, в шаблоне `300`; фактические задания задаются cron источников |
 | `BACKEND_URL` | Адрес backend для Python-демона; по умолчанию `http://localhost:8080` |
 

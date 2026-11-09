@@ -50,7 +50,7 @@
 
 ### 2.1 News Daemon (Python)
 - **Запуск**: в том же контейнере что и бэк (supervisor / systemd / goroutine), отдельный процесс
-- **Конфиг**: `daemon/sources.yaml` — список источников (stub, заполним позже)
+- **Конфиг**: `news-listener/sources.yaml` — список источников (stub, заполним позже)
 - **Цикл**: по расписанию (cron в конфиге) опрашивает источники
 - **Источники**: RSS / HTML / API (селекторы/хедеры в конфиге)
 - **PDF**: сканированные страницы → `docling` (OCR + таблицы) → markdown → текст
@@ -118,7 +118,7 @@ backend/
 │   ├── news_digest/          # Репозиторий выжимок новостей: CRUD, поиск последних N
 │   ├── prompt/               # Сборка универсального промпта для Model B (template + данные)
 │   └── handler/              # HTTP хендлеры (Chi/Gin): /api/news, /api/push, /api/chat
-├── daemon/                   # Python код демона (отдельный entrypoint)
+├── news-listener/               # Python код демона (отдельный entrypoint)
 │   ├── sources.yaml          # Конфиг источников (stub, заполняется позже)
 │   ├── main.py               # Точка входа демона: scheduler + fetcher + parser
 │   ├── fetcher/              # Получение контента: RSS, HTML, API
@@ -134,7 +134,7 @@ backend/
     └── init-databases.sh     # Создание users_db и news_db в postgres entrypoint
 ```
 
-**Принцип:** `internal/` — изолированная бизнес-логика, `cmd/` — сборка бинарников, `daemon/` — отдельный Python-процесс, `migrations/` — версионируемая схема БД.
+**Принцип:** `internal/` — изолированная бизнес-логика, `cmd/` — сборка бинарников, `news-listener/` — отдельный Python-процесс, `migrations/` — версионируемая схема БД.
 
 ---
 
@@ -239,10 +239,10 @@ MODEL_B_MODEL=             # выбрать из списка ниже
 
 # Daemon
 DAEMON_POLL_INTERVAL=300   # секунд, базовый интервал
-DAEMON_SOURCES_CONFIG=./daemon/sources.yaml
+DAEMON_SOURCES_CONFIG=./news-listener/sources.yaml
 ```
 
-### `daemon/sources.yaml` (stub — синтаксис)
+### `news-listener/sources.yaml` (stub — синтаксис)
 ```yaml
 # Конфигурация новостных источников для демона
 # Каждый источник опрашивается независимо по своему расписанию.
@@ -422,7 +422,7 @@ volumes:
 ## 10. Чек-лист готовности к разработке
 
 - [ ] `.env.example` создан
-- [ ] `daemon/sources.yaml` (stub) создан
+- [ ] `news-listener/sources.yaml` (stub) создан
 - [ ] Go module инициализирован (`go mod init`)
 - [ ] Миграции БД написаны
 - [ ] Скрипт загрузки CSV готов

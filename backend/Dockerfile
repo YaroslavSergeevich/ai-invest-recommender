@@ -27,21 +27,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Python deps for daemon
-COPY daemon/requirements.txt /app/daemon/requirements.txt
-RUN pip install --no-cache-dir -r /app/daemon/requirements.txt
+COPY news-listener/requirements.txt /app/news-listener/requirements.txt
+RUN pip install --no-cache-dir -r /app/news-listener/requirements.txt
 
 # Copy Go binary
 COPY --from=builder /backend /usr/local/bin/backend
 
 # Copy app code
-COPY daemon/ /app/daemon/
+COPY news-listener/ /app/news-listener/
 COPY migrations/ /app/migrations/
 COPY scripts/ /app/scripts/
-COPY daemon/sources.yaml /app/daemon/sources.yaml
+COPY news-listener/config/sources.yaml /app/news-listener/config/sources.yaml
 COPY .env /app/.env
 
 # Python path
-ENV PYTHONPATH=/usr/local/lib/python3.11/site-packages:/app/daemon
+ENV PYTHONPATH=/usr/local/lib/python3.11/site-packages:/app/news-listener
 
 # Entrypoint script (runs both processes, inherits container env)
 COPY entrypoint.sh /entrypoint.sh

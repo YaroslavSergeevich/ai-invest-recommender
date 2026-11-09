@@ -153,7 +153,7 @@ class NewsDaemon:
 
 def main():
     # Config from environment
-    config_path = os.getenv("DAEMON_SOURCES_CONFIG", "./daemon/sources.yaml")
+    config_path = os.getenv("DAEMON_SOURCES_CONFIG", "./config/sources.yaml")
     backend_url = os.getenv("BACKEND_URL", "http://localhost:8080")
 
     logger.info(f"Starting News Daemon")

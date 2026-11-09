@@ -43,7 +43,7 @@ func Load() (*Config, error) {
 	v.SetDefault("NEWS_DB", "news_db")
 	v.SetDefault("MODEL_B_BASE_URL", "https://changellenge.up.railway.app/v1")
 	v.SetDefault("DAEMON_POLL_INTERVAL", 300)
-	v.SetDefault("DAEMON_SOURCES_CONFIG", "./daemon/sources.yaml")
+	v.SetDefault("DAEMON_SOURCES_CONFIG", "./news-listener/config/sources.yaml")
 
 	// Read from .env file
 	v.SetConfigName(".env")

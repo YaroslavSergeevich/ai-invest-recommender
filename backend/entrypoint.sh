@@ -6,6 +6,6 @@ echo "Starting backend..."
 BACKEND_PID=$!
 
 echo "Starting daemon..."
-cd /app/daemon
+cd /app/news-listener
 exec python main.py
 EOF
