@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: biz-analytics-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  analyser:
+    build:
+      context: ../analyser
+      dockerfile: Dockerfile
+    container_name: biz-analytics-analyser
+    environment:
+      - LLM_API_KEY=${MODEL_B_API_KEY}
+      - LLM_MODEL=google/gemma-4-26b-a4b-it
+      - LLM_BASE_URL=https://changellenge.up.railway.app/v1
+      - LLM_JSON_MODE=1
+      - LLM_TIMEOUT=120
+      - LLM_MAX_TOKENS=4000
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: biz-analytics-backend
+    environment:
+      - PORT=8080
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - USERS_DB=users_db
+      - NEWS_DB=news_db
+      - MODEL_A_URL=http://analyser:8000/classify
+      - MODEL_B_BASE_URL=https://changellenge.up.railway.app/v1
+      - MODEL_B_API_KEY=${MODEL_B_API_KEY}
+      - MODEL_B_MODEL=${MODEL_B_MODEL}
+      - DAEMON_POLL_INTERVAL=300
+      - DAEMON_SOURCES_CONFIG=/app/daemon/sources.yaml
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      analyser:
+        condition: service_healthy
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:

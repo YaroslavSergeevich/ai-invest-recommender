@@ -1,0 +1,386 @@
+sources:
+  # Федеральные российские СМИ
+  - name: "RBK"
+    type: "rss"
+    url: "https://rssexport.rbc.ru/rbcnews/news/20/full.rss"
+    schedule: "*/15 * * * *"
+    pdf: false
+
+  - name: "Vedomosti"
+    type: "rss"
+    url: "https://www.vedomosti.ru/rss/news"
+    schedule: "*/15 * * * *"
+    pdf: false
+
+  - name: "Kommersant"
+    type: "rss"
+    url: "https://www.kommersant.ru/RSS/main.xml"
+    schedule: "*/15 * * * *"
+    pdf: false
+
+  - name: "TASS_Economy"
+    type: "rss"
+    url: "https://tass.ru/rss/v2.xml"
+    schedule: "*/15 * * * *"
+    pdf: false
+
+  - name: "RIA_Economy"
+    type: "rss"
+    url: "https://ria.ru/export/rss2/archive/economy.xml"
+    schedule: "*/15 * * * *"
+    pdf: false
+
+  - name: "Interfax_Business"
+    type: "rss"
+    url: "https://www.interfax.ru/rss/business.xml"
+    schedule: "*/15 * * * *"
+    pdf: false
+
+  - name: "RIA_Regions"
+    type: "rss"
+    url: "https://ria.ru/export/rss2/archive/regions.xml"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  - name: "TASS_Regions"
+    type: "rss"
+    url: "https://tass.ru/rss/v2.xml?region=1"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  - name: "Gazeta_Ru"
+    type: "rss"
+    url: "https://www.gazeta.ru/export/rss/lenta.xml"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  - name: "Lenta_Ru"
+    type: "rss"
+    url: "https://lenta.ru/rss/news"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  # Отраслевые источники: энергетика, промышленность, IT, АПК, транспорт,
+  # строительство, фармацевтика, торговля и финансы.
+  - name: "Neftegaz"
+    type: "rss"
+    url: "https://neftegaz.ru/rss/"
+    schedule: "0 * * * *"
+    pdf: false
+
+  - name: "Metalinfo"
+    type: "rss"
+    url: "https://metalinfo.ru/rss/"
+    schedule: "0 * * * *"
+    pdf: false
+
+  - name: "Agrovesti"
+    type: "rss"
+    url: "https://agrovesti.net/rss/"
+    schedule: "0 * * * *"
+    pdf: false
+
+  - name: "CNews"
+    type: "rss"
+    url: "https://www.cnews.ru/rss/"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  - name: "Habr"
+    type: "rss"
+    url: "https://habr.com/ru/rss/all/all/"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  - name: "VC_Ru"
+    type: "rss"
+    url: "https://vc.ru/rss/all"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  - name: "Transport_RZD"
+    type: "rss"
+    url: "https://transport.rzd.ru/rss/"
+    schedule: "0 * * * *"
+    pdf: false
+
+  - name: "Stroy_Ru"
+    type: "rss"
+    url: "https://www.stroy.ru/rss/"
+    schedule: "0 * * * *"
+    pdf: false
+
+  - name: "Pharmvestnik"
+    type: "rss"
+    url: "https://pharmvestnik.ru/rss/"
+    schedule: "0 * * * *"
+    pdf: false
+
+  - name: "Retail_RBC"
+    type: "rss"
+    url: "https://retail.rbc.ru/rss/"
+    schedule: "0 * * * *"
+    pdf: false
+
+  - name: "Banki_Ru"
+    type: "rss"
+    url: "https://www.banki.ru/news.rss"
+    schedule: "0 * * * *"
+    pdf: false
+
+  - name: "Frank_Media"
+    type: "rss"
+    url: "https://frankmedia.ru/feed"
+    schedule: "0 */2 * * *"
+    pdf: false
+
+  - name: "Energy_Policy"
+    type: "rss"
+    url: "https://www.eprussia.ru/rss/"
+    schedule: "0 */2 * * *"
+    pdf: false
+
+  - name: "APK_Inform"
+    type: "rss"
+    url: "https://www.apk-inform.com/en/rss"
+    schedule: "0 */2 * * *"
+    pdf: false
+
+  # Региональные порталы: федеральные округа РФ.
+  # CSS-селекторы являются стартовыми шаблонами и должны быть проверены
+  # на актуальной вёрстке сайта перед эксплуатацией.
+  - name: "MSK_Agency"
+    type: "html"
+    url: "https://www.mskagency.ru/"
+    schedule: "0 */2 * * *"
+    list_selector: "article, .news-item, .article-item"
+    link_selector: "a[href]"
+    title_selector: "h1, h2, h3, .title"
+    date_selector: "time[datetime], .date, .published"
+    selector: "article, .article-text, .text, main"
+    pdf: false
+
+  - name: "Fontanka"
+    type: "html"
+    url: "https://www.fontanka.ru/"
+    schedule: "0 */2 * * *"
+    list_selector: "article, .article, .news-item"
+    link_selector: "a[href]"
+    title_selector: "h1, h2, h3, .article__title"
+    date_selector: "time[datetime], .date, .article__date"
+    selector: "article, .article__text, .article-text, main"
+    pdf: false
+
+  - name: "DP_Ru"
+    type: "html"
+    url: "https://www.dp.ru/"
+    schedule: "0 */2 * * *"
+    list_selector: "article, .news-item, .article"
+    link_selector: "a[href]"
+    title_selector: "h1, h2, h3, .title"
+    date_selector: "time[datetime], .date, .published"
+    selector: "article, .article__content, .text, main"
+    pdf: false
+
+  - name: "Kuban_Ru"
+    type: "html"
+    url: "https://kuban.ru/"
+    schedule: "0 */2 * * *"
+    list_selector: "article, .news-item, .article"
+    link_selector: "a[href]"
+    title_selector: "h1, h2, h3, .title"
+    date_selector: "time[datetime], .date, .published"
+    selector: "article, .article-text, .text, main"
+    pdf: false
+
+  - name: "Yuga_Ru"
+    type: "html"
+    url: "https://yuga.ru/"
+    schedule: "0 */2 * * *"
+    list_selector: "article, .news-item, .article"
+    link_selector: "a[href]"
+    title_selector: "h1, h2, h3, .title"
+    date_selector: "time[datetime], .date, .published"
+    selector: "article, .article-text, .text, main"
+    pdf: false
+
+  - name: "Kavkaz_Uzel"
+    type: "html"
+    url: "https://www.kavkaz-uzel.eu/"
+    schedule: "0 */2 * * *"
+    list_selector: "article, .news-item, .article"
+    link_selector: "a[href]"
+    title_selector: "h1, h2, h3, .title"
+    date_selector: "time[datetime], .date, .published"
+    selector: "article, .article-body, .text, main"
+    pdf: false
+
+  - name: "Kazanfirst"
+    type: "html"
+    url: "https://kazanfirst.ru/"
+    schedule: "0 */2 * * *"
+    list_selector: "article, .news-item, .article"
+    link_selector: "a[href]"
+    title_selector: "h1, h2, h3, .title"
+    date_selector: "time[datetime], .date, .published"
+    selector: "article, .article-text, .text, main"
+    pdf: false
+
+  - name: "UralPolit"
+    type: "html"
+    url: "https://uralpolit.ru/"
+    schedule: "0 */2 * * *"
+    list_selector: "article, .news-item, .article"
+    link_selector: "a[href]"
+    title_selector: "h1, h2, h3, .title"
+    date_selector: "time[datetime], .date, .published"
+    selector: "article, .article-text, .text, main"
+    pdf: false
+
+  - name: "OmskZdes"
+    type: "html"
+    url: "https://omskzdes.ru/"
+    schedule: "0 */2 * * *"
+    list_selector: "article, .news-item, .article"
+    link_selector: "a[href]"
+    title_selector: "h1, h2, h3, .title"
+    date_selector: "time[datetime], .date, .published"
+    selector: "article, .article-text, .text, main"
+    pdf: false
+
+  - name: "DVNovosti"
+    type: "html"
+    url: "https://www.dvnovosti.ru/"
+    schedule: "0 */2 * * *"
+    list_selector: "article, .news-item, .article"
+    link_selector: "a[href]"
+    title_selector: "h1, h2, h3, .title"
+    date_selector: "time[datetime], .date, .published"
+    selector: "article, .article-text, .text, main"
+    pdf: false
+
+  - name: "VostokMedia"
+    type: "html"
+    url: "https://vostokmedia.com/"
+    schedule: "0 */2 * * *"
+    list_selector: "article, .news-item, .article"
+    link_selector: "a[href]"
+    title_selector: "h1, h2, h3, .title"
+    date_selector: "time[datetime], .date, .published"
+    selector: "article, .article-text, .text, main"
+    pdf: false
+
+  # Международные СМИ: США, ЕС, Китай, Азия, Ближний Восток и глобальные рынки.
+  - name: "Reuters_Business"
+    type: "rss"
+    url: "https://feeds.reuters.com/reuters/businessNews"
+    schedule: "*/15 * * * *"
+    pdf: false
+
+  - name: "Bloomberg_Markets"
+    type: "rss"
+    url: "https://feeds.bloomberg.com/markets/news.rss"
+    schedule: "*/15 * * * *"
+    pdf: false
+
+  - name: "Financial_Times"
+    type: "rss"
+    url: "https://www.ft.com/rss/home"
+    schedule: "*/15 * * * *"
+    pdf: false
+
+  - name: "WSJ_World"
+    type: "rss"
+    url: "https://feeds.a.dj.com/rss/RSSWorldNews.xml"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  - name: "SCMP"
+    type: "rss"
+    url: "https://www.scmp.com/rss/2/feed"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  - name: "Xinhua_Business"
+    type: "rss"
+    url: "http://www.xinhuanet.com/english/rss/businessrss.xml"
+    schedule: "0 * * * *"
+    pdf: false
+
+  - name: "Anadolu_Business"
+    type: "rss"
+    url: "https://www.aa.com.tr/en/rss/default?cat=business"
+    schedule: "0 * * * *"
+    pdf: false
+
+  - name: "Gulf_News_Business"
+    type: "rss"
+    url: "https://gulfnews.com/rss/1/Business"
+    schedule: "0 * * * *"
+    pdf: false
+
+  - name: "BBC_Business"
+    type: "rss"
+    url: "https://feeds.bbci.co.uk/news/business/rss.xml"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  - name: "The_Guardian_Business"
+    type: "rss"
+    url: "https://www.theguardian.com/business/rss"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  - name: "CNBC_Top_News"
+    type: "rss"
+    url: "https://www.cnbc.com/id/10001147/device/rss/rss.html"
+    schedule: "*/30 * * * *"
+    pdf: false
+
+  - name: "Al_Jazeera_Economy"
+    type: "rss"
+    url: "https://www.aljazeera.com/xml/rss/all.xml"
+    schedule: "0 * * * *"
+    pdf: false
+
+  # Открытые API / справочные данные. Эти endpoints возвращают данные,
+  # а не обязательно новостные статьи; используйте отдельную обработку по типу API.
+  - name: "CBR_KeyRate"
+    type: "api"
+    url: "https://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx"
+    schedule: "0 */6 * * *"
+    headers:
+      "Accept": "application/json, application/xml, text/xml"
+    pdf: false
+
+  - name: "CBR_ExchangeRates"
+    type: "api"
+    url: "https://www.cbr-xml-daily.ru/daily_json.js"
+    schedule: "0 * * * *"
+    headers:
+      "Accept": "application/json"
+    pdf: false
+
+  - name: "MOEX_Securities"
+    type: "api"
+    url: "https://iss.moex.com/iss/securities.json"
+    schedule: "0 */2 * * *"
+    headers:
+      "Accept": "application/json"
+    pdf: false
+
+  - name: "Eurostat_Indicators"
+    type: "api"
+    url: "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nama_10_gdp?geo=EU27_2020"
+    schedule: "0 6,18 * * *"
+    headers:
+      "Accept": "application/json"
+    pdf: false
+
+  - name: "WorldBank_Indicators"
+    type: "api"
+    url: "https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CD?format=json"
+    schedule: "0 6,18 * * *"
+    headers:
+      "Accept": "application/json"
+    pdf: false

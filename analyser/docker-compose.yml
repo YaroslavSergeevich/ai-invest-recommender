@@ -1,0 +1,14 @@
+services:
+  news-classifier:
+    build: .
+    image: news-classifier
+    container_name: news-classifier
+    ports:
+      - "8000:8000"
+    # Ключ и настройки берутся из файла .env рядом с docker-compose.yml
+    env_file:
+      - .env
+    volumes:
+      # справочник можно менять без пересборки образа (затем: docker compose restart)
+      - ./industries.csv:/app/industries.csv:ro
+    restart: unless-stopped
