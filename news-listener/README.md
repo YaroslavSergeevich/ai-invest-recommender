@@ -26,13 +26,14 @@
 
 | Файл | Назначение |
 |------|------------|
-| `main.py` | Точка входа: планировщик (APScheduler), цикл обработки источников |
+| `main.py` | Точка входа: планировщик (APScheduler), цикл обработки источников, health-check сервер (порт 8081) |
 | `fetcher.py` | `RSSFetcher`, `HTMLFetcher`, `APIFetcher` — получение контента |
 | `parser.py` | `DoclingParser` (PDF → markdown, OCR), `HTMLParser` (очистка, селекторы) |
 | `client.py` | `BackendClient` — HTTP-клиент с ретраями (tenacity, до 3 попыток, эксп. backoff) |
 | `config/sources.yaml` | Список источников, типы, расписания, селекторы |
 | `requirements.txt` | Python-зависимости |
-| `Dockerfile` | Образ для автономного контейнера |
+| `Dockerfile` | Образ для автономного контейнера (non-root, healthcheck) |
+| `.dockerignore` | Исключения для контекста сборки |
 
 ---
 
@@ -82,34 +83,33 @@ export DAEMON_SOURCES_CONFIG=./config/sources.yaml
 python main.py
 ```
 
-### 2. Docker (автономный контейнер)
+Health-check доступен на `http://localhost:8081/health`.
+
+### 2. Docker (автономный контейнер, продакшен-готовый)
 
 ```bash
-# Сборка
+# Сборка из /news-listener
 docker build -t news-listener .
 
-# Запуск (backend должен быть доступен)
-docker run --rm --name news-listener \
-  --env-file ../.env \
-  -e BACKEND_URL=http://host.docker.internal:8080 \
-  news-listener
-```
-
-### 3. В одной сети с backend
-
-```bash
+# Запуск в одной сети с backend (рекомендуется для удалённых серверов)
 docker network create biz-net
 
-# Backend
+# Backend (пример)
 docker run -d --name backend --network biz-net -p 8080:8080 \
   --env-file ../.env backend-image
 
 # Listener
-docker run --rm --name news-listener --network biz-net \
+docker run -d --name news-listener --network biz-net \
   --env-file ../.env \
-  -e BACKEND_URL=http://backend:8080 \
+  --restart unless-stopped \
   news-listener
 ```
+
+**Важно**: 
+- Не используйте `host.docker.internal` на Linux — он работает только в Docker Desktop (Mac/Windows).
+- В одной сети (`biz-net`) backend доступен как `http://backend:8080` (см. `ENV BACKEND_URL` в Dockerfile).
+- Контейнер запускается от non-root пользователя `appuser` (UID 1000).
+- Health-check: `curl -f http://localhost:8081/health` (каждые 30с, см. Dockerfile).
 
 ---
 
@@ -117,11 +117,12 @@ docker run --rm --name news-listener --network biz-net \
 
 | Переменная | Обязательна | По умолчанию | Описание |
 |---|---|---|---|
-| `BACKEND_URL` | **да** | `http://localhost:8080` | URL Backend API для `POST /api/news` |
+| `BACKEND_URL` | **да** | `http://backend:8080` | URL Backend API для `POST /api/news` |
 | `DAEMON_SOURCES_CONFIG` | нет | `/app/config/sources.yaml` | Путь к YAML конфигурации источников |
 | `PYTHONPATH` | нет | `/app` | Установлен в Dockerfile |
 
 > **Backend не требует** `MODEL_A_URL`, `MODEL_B_*`, `POSTGRES_*` — демон только отправляет сырые новости.
+> Health-check сервер всегда слушает на порту **8081** (не настраивается).
 
 ---
 
@@ -175,11 +176,13 @@ pyyaml>=6.0.1           # YAML конфиг
 apscheduler>=3.10.4     # Cron-планировщик
 tenacity>=8.3.0         # Ретраи
 lxml>=5.0.0             # Быстрый парсер для BS4
+aiohttp>=3.9.0          # Health-check HTTP сервер
 ```
 
 Системные зависимости (в Dockerfile):
 - `poppler-utils` — PDF → изображения для Docling
 - `tesseract-ocr` + `tesseract-ocr-rus/eng` — OCR русского/английского
+- `curl` — для Docker HEALTHCHECK
 
 ---
 

@@ -7,7 +7,10 @@ import os
 import sys
 import signal
 import logging
+import threading
+import asyncio
 from pathlib import Path
+from aiohttp import web
 
 # Add daemon directory to path
 DAEMON_DIR = Path(__file__).parent
@@ -27,6 +30,26 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout)]
 )
 logger = logging.getLogger(__name__)
+
+HEALTH_PORT = 8081
+
+
+async def health_handler(request):
+    """Health check endpoint for Docker HEALTHCHECK."""
+    return web.json_response({"status": "ok", "service": "news-listener"})
+
+
+async def run_health_server():
+    """Run aiohttp health server in a separate thread."""
+    app = web.Application()
+    app.router.add_get("/health", health_handler)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", HEALTH_PORT)
+    await site.start()
+    # Keep running
+    import asyncio
+    await asyncio.Event().wait()
 
 
 class NewsDaemon:
@@ -159,6 +182,14 @@ def main():
     logger.info(f"Starting News Daemon")
     logger.info(f"  Config: {config_path}")
     logger.info(f"  Backend: {backend_url}")
+
+    # Start health check server in background thread
+    def run_health_server_thread():
+        asyncio.run(run_health_server())
+
+    health_thread = threading.Thread(target=run_health_server_thread, daemon=True)
+    health_thread.start()
+    logger.info(f"Health check server started on port {HEALTH_PORT}")
 
     daemon = NewsDaemon(config_path, backend_url)
 
